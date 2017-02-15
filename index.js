@@ -68,7 +68,7 @@ module.exports.log = function _log(s) {
 };
 
 // find tasks in ohfile
-tasks = require('./ohfile');
+tasks = require('./ohai');
 
 // run task if we can
 beforeAll().then(() => run('listCWD')).then(afterAll);
