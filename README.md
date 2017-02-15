@@ -6,6 +6,7 @@ POC of a tiny task-runner.
 
 - `yarn install`
 - `yarn link` to add the local binary to your path (you need `yarn@~0.19.0` for `link` to work)
+- only tried with Node 6 so far
 
 ## Structure
 - `index.js` the task runner
