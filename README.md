@@ -1,6 +1,6 @@
 # Oh
 
-POC of a tiny task runner.
+POC of a tiny task-runner.
 
 ## Development
 
@@ -15,3 +15,4 @@ POC of a tiny task runner.
 ## Todo
 - [ ] accept task names as input `oh x` etc
 - [ ] add quiet mode (no task logging except errors)
+- [ ] settle on a better name that `ohfile.js`
