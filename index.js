@@ -64,11 +64,11 @@ module.exports.afterAll = fn => {
 };
 module.exports.run = run;
 module.exports.log = function _log(s) {
-    console.log(chalk.green.dim(`OH_${changeCase.snakeCase(s)}`));
+    console.log(chalk.green.dim(`${s.split(' ').join('_')}`));
 };
 
 // find tasks in ohfile
-tasks = require('ohfile');
+tasks = require('./ohfile');
 
 // run task if we can
 beforeAll().then(() => run('listCWD')).then(afterAll);

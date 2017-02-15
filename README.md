@@ -16,4 +16,5 @@ POC of a tiny task-runner.
 ## Todo
 - [ ] accept task names as input `oh x` etc
 - [ ] add quiet mode (no task logging except errors)
+- [ ] show that tasks are subtasks in the terminal
 - [ ] settle on a better name that `ohfile.js`

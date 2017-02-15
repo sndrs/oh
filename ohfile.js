@@ -1,5 +1,5 @@
-// not necessary, but provide some helpers
-const oh = require('./src/index.js');
+// not necessary, but provides some helpers
+const oh = require('./index.js'); // in reality would require('oh')
 
 // optional, run before task list starts
 oh.beforeAll(() => {
@@ -30,7 +30,10 @@ module.exports = {
     },
 
     // `oh listCWD` simple command
-    listCWD: 'ls -la',
+    listCWD() {
+        oh.run('log');
+        return 'ls -la';
+    },
 
     // `oh thing2` Promise method
     thing2: Promise.resolve('hi'),
