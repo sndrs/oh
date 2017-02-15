@@ -11,7 +11,7 @@ POC of a tiny task-runner.
 ## Structure
 - `index.js` the task runner
 - `bin.js` the binary that points at `index.js`
-- `ohfile.js` task manifest – this is the file you'd expect to see in a project root
+- `ohai.js` task manifest – this is the file you'd expect to see in a project root
 
 ## Todo
 - [ ] accept task names as input `oh x` etc
