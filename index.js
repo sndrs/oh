@@ -1,8 +1,10 @@
 /* eslint-disable no-console */
 
+const vm = require('vm');
+const fs = require('fs');
+
 const execa = require('execa');
 const chalk = require('chalk');
-const changeCase = require('change-case');
 
 // generic error handling, we don't need to handle them anywhere else
 const handleError = err => {
@@ -21,7 +23,7 @@ const promisify = fn => new Promise((resolve, reject) => {
     }
 });
 
-// variables that will/can be overridden by user config
+// variables that are/can be set by ohai
 let tasks;
 let beforeAll = () => Promise.resolve();
 let afterAll = () => Promise.resolve();
@@ -35,14 +37,9 @@ const run = (taskName = 'default') => {
     switch (typeof task) {
         case 'function':
             return task();
-        case 'string': {
-            const [binary, ...args] = task.trim().split(' ');
-            return execa(binary, [args], {
-                stdio: 'inherit'
-            });
-        }
         case 'object':
-            if (typeof task.then !== 'undefined') {
+            // if it's a promise...
+            if (typeof task.then === 'function') {
                 return task;
             }
             throw new Error(
@@ -55,20 +52,29 @@ const run = (taskName = 'default') => {
     }
 };
 
-// public functions for use in ohfile.js
-module.exports.beforeAll = fn => {
-    beforeAll = () => promisify(fn);
-};
-module.exports.afterAll = fn => {
-    afterAll = () => promisify(fn);
-};
-module.exports.run = run;
-module.exports.log = function _log(s) {
-    console.log(chalk.green.dim(`OH_«${s.split(' ').join('_')}»`));
-};
+// globals for ohai
+const helpers = Object.assign(global, {
+    module,
+    run,
+    beforeAll(fn) {
+        beforeAll = () => promisify(fn);
+    },
+    afterAll(fn) {
+        afterAll = () => promisify(fn);
+    },
+    log(s) {
+        console.log(chalk.green.dim(`OH_«${s.split(' ').join('_')}»`));
+    },
+    exec(cmd) {
+        const [binary, ...args] = cmd.trim().split(' ');
+        return execa.sync(binary, [args], {
+            stdio: 'inherit'
+        });
+    }
+});
 
-// find tasks in ohfile
-tasks = require('./ohai');
+// get tasks in ohai, providing a some global helpers
+tasks = vm.runInNewContext(fs.readFileSync('ohai.js'), helpers);
 
 // run task if we can
 beforeAll().then(() => run('listCWD')).then(afterAll);

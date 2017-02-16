@@ -1,38 +1,37 @@
-// not necessary, but provides some helpers
-const oh = require('./index.js'); // in reality would require('oh')
+/* global beforeAll, afterAll, log, run, exec */
 
 // optional, run before task list starts
-oh.beforeAll(() => {
+beforeAll(() => {
     // e.g. check env, package versions etc
-    oh.log('beforeAll');
+    log('beforeAll');
 });
 
 // optional, run after task list starts
-oh.afterAll(() => {
+afterAll(() => {
     // do any kind of clean up
-    oh.log('afterAll');
+    log('afterAll');
 });
 
 module.exports = {
     // run if `oh` has no input tasks (or `oh default`)
     default() {
         // run `log` task
-        oh.run('log');
+        run('log');
 
-        return oh.run('clean').then(() => {
-            oh.log("i've cleaned up");
+        return run('clean').then(() => {
+            log("i've cleaned up");
         });
     },
 
     // `oh log` simple function that returns nothing
     log() {
-        oh.log('hi Lorem ipsum dolor sit amet');
+        log('hi Lorem ipsum dolor sit amet');
     },
 
     // `oh listCWD` simple command
     listCWD() {
-        oh.run('log');
-        return 'ls -la';
+        run('log');
+        exec('ls -la');
     },
 
     // `oh thing2` Promise method
@@ -40,7 +39,7 @@ module.exports = {
 
     // `oh clean` function that returns
     clean() {
-        return oh.run('cleanJS');
+        return run('cleanJS');
     },
 
     // `oh cleanJS` promise
