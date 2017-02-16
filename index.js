@@ -1,10 +1,8 @@
 /* eslint-disable no-console */
 
-const vm = require('vm');
-const fs = require('fs');
-
 const execa = require('execa');
 const chalk = require('chalk');
+const sandbox = require('sandboxed-module');
 
 // generic error handling, we don't need to handle them anywhere else
 const handleError = err => {
@@ -52,29 +50,26 @@ const run = (taskName = 'default') => {
     }
 };
 
-// globals for ohai
-const helpers = Object.assign(global, {
-    module,
-    run,
-    beforeAll(fn) {
-        beforeAll = () => promisify(fn);
-    },
-    afterAll(fn) {
-        afterAll = () => promisify(fn);
-    },
-    log(s) {
-        console.log(chalk.green.dim(`OH_«${s.split(' ').join('_')}»`));
-    },
-    exec(cmd) {
-        const [binary, ...args] = cmd.trim().split(' ');
-        return execa.sync(binary, [args], {
-            stdio: 'inherit'
-        });
+// get tasks in ohai, providing a some global helpers
+tasks = sandbox.require('./ohai.js', {
+    locals: {
+        run,
+        beforeAll(fn) {
+            beforeAll = () => promisify(fn);
+        },
+        afterAll(fn) {
+            afterAll = () => promisify(fn);
+        },
+        log(s) {
+            console.log(chalk.green.dim(`OH_«${s.split(' ').join('_')}»`));
+        },
+        exec(cmd) {
+            const [binary, ...args] = cmd.trim().split(' ');
+            return execa.sync(binary, [args], {
+                stdio: 'inherit'
+            });
+        }
     }
 });
-
-// get tasks in ohai, providing a some global helpers
-tasks = vm.runInNewContext(fs.readFileSync('ohai.js'), helpers);
-
 // run task if we can
 beforeAll().then(() => run('listCWD')).then(afterAll);
