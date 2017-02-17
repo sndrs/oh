@@ -9,7 +9,7 @@ In-development PoC of a tiny, development and CI-friendly task-runner.
 - [ ] autocomplete task names
 - [ ] tests!
 - [x] parallel tasks
-- [ ] allow multiple manifests (`oh.compile.js` => `oh compile.js`, `oh.test.js` => `oh test.app`)
+- [ ] allow multiple manifests (`oh.compile.js` => `oh compile.css`, `oh.test.js` => `oh test.app`)
 - [ ] a way to specify where to find manifests
 
 ## Features
