@@ -78,13 +78,13 @@ Executes a string as a terminal command, using local binaries if they're availab
 
 ## Built-in tasks
 
-You can define setup/teardown-style tasks, which you do not need to export:
+Two optional setup/teardown-style tasks are available, which you do not need to export:
 
 ### before(function)
-*optional* – do something before the tasks start e.g. check the version of node your running in, `npm i` etc.
+Do something before the tasks start e.g. check the version of node your running in, `npm i` etc.
 
 ### after(function)
-*optional* – do something after the tasks end e.g. clean up artefacts, restore previous state etc.
+Do something after the tasks end e.g. clean up artefacts, restore previous state etc.
 
 
 ## Development
