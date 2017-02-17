@@ -65,17 +65,17 @@ Any function that you `export` from `oh.js` becomes a task.
 
 `oh` provides the following helpers for use in an `oh.js`:
 
-### log(String)
+### log(string)
 Tell yourself something about whats going on.
 
-### run(String|Array)
+### run(string|array)
 Run other tasks defined in `oh.js`. 
 
 An array of task names will run in parallel. `run` will return a promise that resolves once they are complete.
 
 A single task name will return whatever that task returns.
 
-### exec(String)
+### exec(string)
 Executes a string as a terminal command, using local binaries if they're available (like `npm` scripts).
 
 ## Built-in tasks
