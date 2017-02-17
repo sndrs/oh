@@ -61,7 +61,7 @@ Now you can run `oh` (run the default task, if defined), or `oh runABandCinParal
 ## API
 Any function that you `export` from `oh.js` becomes a task.
 
-`oh` provides some helpers for use in `oh.js`.
+`oh` provides the following helpers for use in an `oh.js`:
 
 ### log(String)
 Tell yourself something about whats going on.
