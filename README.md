@@ -67,18 +67,18 @@ Any function that you `export` from `oh.js` becomes a task.
 Tell yourself something about whats going on.
 
 ### run(String|Array)
-Run another task defined in `oh.js`. 
+Run other tasks defined in `oh.js`. 
 
-If you pass an Array of task names, they will run in parallel and return a promise once they have all finished.
+An array of task names will run in parallel. `run` will return a promise that resolves once they are complete.
 
-If you pass a single task name, it will return whatever that task returns.
+A single task name will return whatever that task returns.
 
 ### exec(String)
 Executes a string as a terminal command, using local binaries if they're available (like `npm` scripts).
 
 ## Built-in tasks
 
-You can also define some setup/teardown-style tasks, which you do not need to export:
+You can define setup/teardown-style tasks, which you do not need to export:
 
 ### before(function)
 *optional* – do something before the tasks start e.g. check the version of node your running in, `npm i` etc.
