@@ -6,7 +6,7 @@ const updateablePromise = require('./lib/updateable-promise');
 
 // generic error handling, we don't need to handle them anywhere else
 const handleError = err => {
-    console.log(chalk.black.bgRed(`OH NO ${err.stack || err}`));
+    console.log(chalk.black.bgRed(`OH_NO_${err.stack || err}`));
     process.exit(1);
 };
 process.on('unhandledRejection', handleError);

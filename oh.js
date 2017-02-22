@@ -14,14 +14,19 @@ module.exports = {
     },
 
     clean() {
-        return this.run(['cleanJS', 'cleanCSS']);
+        return this
+            .run(['cleanJS', 'cleanCSS'])
+            .then(() => this.log('cleaned up'));
     },
 
     cleanJS() {
         this.log('clean JS');
+        return new Promise(resolve => {
+            setTimeout(resolve, 2000);
+        });
     },
 
     cleanCSS() {
-        this.exec('ls');
+        return this.exec('ls');
     }
 };
