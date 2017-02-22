@@ -1,5 +1,5 @@
 module.exports = {
-    __before() {
+    OH_before() {
         this.log('this happens before the tasks start');
     },
 
@@ -24,7 +24,7 @@ module.exports = {
         return this.exec('ls');
     },
 
-    __after() {
+    OH_after() {
         this.log('this happens after the tasks end');
     }
 };

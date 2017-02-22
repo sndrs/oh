@@ -33,16 +33,11 @@ In-development PoC of a tiny, development and CI-friendly task-runner.
 ```javascript
 // oh.js
 
-before(() => {
-    log('this happens before all the tasks start');
-});
-
-after(() => {
-    log('this happens after all the tasks end');
-});
-
-// these are your tasks
 module.exports = { 
+    OH_before() {
+        this.log('this happens before the tasks start');
+    },
+    
     default() {
         log("I'm going to run the `runABandCinParallel` task");
         run('runABandCinParallel');
@@ -54,7 +49,11 @@ module.exports = {
 
     a: () => exec('ls -l'),
     b: () => exec('ls -a'),
-    c: () => exec('ls -G')
+    c: () => exec('ls -G'),
+
+    OH_after() {
+        this.log('this happens after the tasks end');
+    }
 };
 
 ```
@@ -80,12 +79,12 @@ Returns a promise that resolves once the command completes.
 
 ## Built-in tasks
 
-Two optional setup/teardown-style tasks are available, which you do not need to export:
+Two optional setup/teardown-style tasks are available:
 
-### before(function)
+### OH_before(function)
 Do something before the tasks start e.g. check the version of node your running in, `npm i` etc.
 
-### after(function)
+### OH_after(function)
 Do something after the tasks end e.g. clean up artefacts, restore previous state etc.
 
 
