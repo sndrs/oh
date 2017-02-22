@@ -1,14 +1,8 @@
-/* global */
-
-// this.before(() => {
-//     this.log('this happens before the tasks start');
-// });
-//
-// this.after(() => {
-//     this.log('this happens after the tasks end');
-// });
-
 module.exports = {
+    __before() {
+        this.log('this happens before the tasks start');
+    },
+
     compile() {
         return this.run('clean');
     },
@@ -28,5 +22,9 @@ module.exports = {
 
     cleanCSS() {
         return this.exec('ls');
+    },
+
+    __after() {
+        this.log('this happens after the tasks end');
     }
 };
