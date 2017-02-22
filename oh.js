@@ -1,72 +1,27 @@
-/* global before, after, log, run, exec */
+/* global */
 
-before(() => {
-    log('this happens before the tasks start');
-});
-
-after(() => {
-    log('this happens after the tasks end');
-});
+// this.before(() => {
+//     this.log('this happens before the tasks start');
+// });
+//
+// this.after(() => {
+//     this.log('this happens after the tasks end');
+// });
 
 module.exports = {
-    default() {
-        run('log');
-
-        return run('clean').then(() => {
-            log("i've cleaned up");
-        });
+    compile() {
+        return this.run('clean');
     },
-
-    log() {
-        log('hi Lorem ipsum dolor sit amet');
-    },
-
-    parallel() {
-        return run(['wait2Seconds', 'wait2point5Seconds']).then(() =>
-            run('wait2Seconds'));
-    },
-
-    wait2Seconds() {
-        return new Promise(resolve => {
-            setTimeout(
-                () => {
-                    log('2 seconds have passed');
-                    resolve();
-                },
-                2000
-            );
-        });
-    },
-
-    wait2point5Seconds() {
-        return new Promise(resolve => {
-            setTimeout(
-                () => {
-                    log('2.5 seconds have passed');
-                    resolve();
-                },
-                2500
-            );
-        });
-    },
-
-    listCWD() {
-        run('log');
-        exec('ls -la');
-    },
-
-    thing2: Promise.resolve('hi'),
 
     clean() {
-        return run('cleanJS');
+        return this.run(['cleanJS', 'cleanCSS']);
     },
 
-    cleanJS: () => new Promise((resolve, reject) => {
-        setTimeout(
-            () => {
-                reject('failed');
-            },
-            2000
-        );
-    })
+    cleanJS() {
+        this.log('clean JS');
+    },
+
+    cleanCSS() {
+        this.exec('ls');
+    }
 };

@@ -5,7 +5,7 @@ In-development PoC of a tiny, development and CI-friendly task-runner.
 ### To do
 - [ ] accept task names as input `oh x` etc and make all flags available to tasks
 - [ ] add quiet mode (no task logging except errors)
-- [ ] show that tasks are subtasks in the terminal
+- [x] show that tasks are subtasks in the terminal
 - [ ] autocomplete task names
 - [ ] tests!
 - [x] parallel tasks
@@ -65,18 +65,18 @@ Any function that you `export` from `oh.js` becomes a task.
 
 `oh` provides the following helpers for use in an `oh.js`:
 
-### log(string)
+### log(String)
 Tell yourself something about whats going on.
 
-### run(string|array)
-Run other tasks defined in `oh.js`. 
+### run(String|Array)
+Run other tasks defined in `oh.js`. An array of task names will run in parallel.
 
-An array of task names will run in parallel. `run` will return a promise that resolves once they are complete.
+Returns a promise that resolves once the task(s) completes.
 
-A single task name will return whatever that task returns.
-
-### exec(string)
+### exec(String)
 Executes a string as a terminal command, using local binaries if they're available (like `npm` scripts).
+
+Returns a promise that resolves once the command completes.
 
 ## Built-in tasks
 
