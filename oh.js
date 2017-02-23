@@ -3,25 +3,26 @@ module.exports = {
         this.log('this happens before the tasks start');
     },
 
-    compile() {
-        return this.run('clean');
+    main() {
+        return this.run('logOpts').then(() => this.run('other'));
     },
 
-    clean() {
-        return this
-            .run(['cleanJS', 'cleanCSS'])
-            .then(() => this.log('cleaned up'));
+    other() {
+        return this.run(['other2', 'ls']).then(() => this.log('ran others'));
     },
 
-    cleanJS() {
-        this.log('clean JS');
+    other2() {
         return new Promise(resolve => {
             setTimeout(resolve, 2000);
         });
     },
 
-    cleanCSS() {
+    ls() {
         return this.exec('ls');
+    },
+
+    logOpts() {
+        this.log(this.args);
     },
 
     __after() {

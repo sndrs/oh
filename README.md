@@ -4,7 +4,7 @@ In-development PoC of a tiny, development and CI-friendly task-runner.
 
 ### To do
 - [x] accept task names as input `oh x` etc
-- [ ] make all flags available to tasks
+- [x] make all flags available to tasks
 - [ ] add quiet mode (no task logging except errors)
 - [x] show that tasks are subtasks in the terminal
 - [ ] autocomplete task names
@@ -34,23 +34,32 @@ In-development PoC of a tiny, development and CI-friendly task-runner.
 ```javascript
 // oh.js
 
-module.exports = { 
+module.exports = {
     __before() {
         this.log('this happens before the tasks start');
     },
-    
-    default() {
-        log("I'm going to run the `runABandCinParallel` task");
-        run('runABandCinParallel');
+
+    main() {
+        return this.run('logOpts').then(() => this.run('other'));
     },
 
-    runABandCinParallel() {
-        run(['a', 'b', 'c']);
+    other() {
+        return this.run(['other2', 'ls']).then(() => this.log('ran others'));
     },
 
-    a: () => exec('ls -l'),
-    b: () => exec('ls -a'),
-    c: () => exec('ls -G'),
+    other2() {
+        return new Promise(resolve => {
+            setTimeout(resolve, 2000);
+        });
+    },
+
+    ls() {
+        return this.exec('ls');
+    },
+
+    logOpts() {
+        this.log(this.args);
+    },
 
     __after() {
         this.log('this happens after the tasks end');
@@ -58,7 +67,11 @@ module.exports = {
 };
 
 ```
-Now you can run `oh` (run the default task, if defined), or `oh runABandCinParallel`, `oh a` etc.
+Now you can run `oh main`, `oh ls` etc.
+
+You can also run multiple tasks e.g. `oh other other2`. They will run in series. 
+
+You can supply arguments to your tasks too e.g `oh main --dev`, `oh logOpts --greeting 'hi there'` etc. They are available via `this.args`.
 
 ## API
 Any function that you `export` from `oh.js` becomes a task.
@@ -78,6 +91,9 @@ Executes a string as a terminal command, using local binaries if they're availab
 
 Returns a promise that resolves once the command completes.
 
+### args
+An object representing any options in the command, except `h`, `help`, `v` and `version`.
+
 ## Built-in tasks
 
 Two optional setup/teardown-style tasks are available:
@@ -95,7 +111,7 @@ Do something after the tasks end e.g. clean up artefacts, restore previous state
 - only tried with Node 6 so far
 
 ### Files
-- `index.js` the task runner
-- `oh` the binary that points at `index.js`
 - `oh.js` task manifest – this is the file you'd expect to see in a project root
+- `index.js` the application that runs the tasks in `oh.js`
+- `oh` the binary that points at `index.js`
 

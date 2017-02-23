@@ -1,5 +1,6 @@
 /* eslint-disable no-console, camelcase */
 const chalk = require('chalk');
+const omit = require('lodash.omit');
 
 const Runner = require('./lib/oh.runner');
 
@@ -11,23 +12,44 @@ const handleError = err => {
 process.on('unhandledRejection', handleError);
 process.on('uncaughtException', handleError);
 
+// get the list of user tasks from a local oh.js
 const userTasks = require('./oh.js');
-const yargs = require('yargs').usage('$0 <cmd> [args]').alias('h', 'help');
 
+// parse the args from running `oh ...`
+const yargs = require('yargs')
+    .usage('$0 <cmd> [args]')
+    .recommendCommands()
+    .demandCommand(1, 'You need to supply at least one task to run.')
+    .help()
+    .version()
+    .alias({
+        version: 'v',
+        help: 'h'
+    });
+
+// add all possible user tasks to the help output
 Object.keys(userTasks)
     .filter(task => !task.includes('__'))
     .sort()
-    .forEach(task => yargs.command(task));
+    .forEach(task => {
+        yargs.command(task);
+    });
 
-const { _: tasksToRun } = yargs.help().argv;
+// get the bits we needs from the args
+const { _: tasksToRun } = yargs.argv;
+const args = omit(yargs.argv, ['_', 'h', 'help', 'v', 'version', '$0']);
 
-const oh = new Runner(userTasks);
-
-oh
-    .before()
-    .then(() =>
-        tasksToRun.reduce(
-            (allTasks, task) => allTasks.then(() => oh.run(task)),
-            Promise.resolve()
-        ))
-    .then(() => oh.after());
+// if no command is supplied, just show help
+if (!tasksToRun.length) {
+    yargs.showHelp();
+} else {
+    const oh = new Runner(userTasks, args);
+    oh
+        .before()
+        .then(() =>
+            tasksToRun.reduce(
+                (allTasks, task) => allTasks.then(() => oh.run(task)),
+                Promise.resolve()
+            ))
+        .then(() => oh.after());
+}
