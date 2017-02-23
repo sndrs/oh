@@ -76,32 +76,32 @@ You can supply arguments to your tasks too e.g `oh main --dev`, `oh logOpts --gr
 ## API
 Any function that you `export` from `oh.js` becomes a task.
 
-`oh` provides the following helpers for use in an `oh.js`:
+`oh` provides the following helpers for use in a task:
 
-### log(String)
+### this.log(String)
 Tell yourself something about whats going on.
 
-### run(String|Array)
+### this.run(String|Array)
 Run other tasks defined in `oh.js`. An array of task names will run in parallel.
 
 Returns a promise that resolves once the task(s) completes.
 
-### exec(String)
+### this.exec(String)
 Executes a string as a terminal command, using local binaries if they're available (like `npm` scripts).
 
 Returns a promise that resolves once the command completes.
 
-### args
+### this.args
 An object representing any options in the command, except `h`, `help`, `v` and `version`.
 
 ## Built-in tasks
 
 Two optional setup/teardown-style tasks are available:
 
-### OH_before(function)
+### this.__before(function)
 Do something before the tasks start e.g. check the version of node your running in, `npm i` etc.
 
-### OH_after(function)
+### this.__after(function)
 Do something after the tasks end e.g. clean up artefacts, restore previous state etc.
 
 
