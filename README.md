@@ -34,7 +34,7 @@ In-development PoC of a tiny, development and CI-friendly task-runner.
 // oh.js
 
 module.exports = { 
-    OH_before() {
+    __before() {
         this.log('this happens before the tasks start');
     },
     
@@ -51,7 +51,7 @@ module.exports = {
     b: () => exec('ls -a'),
     c: () => exec('ls -G'),
 
-    OH_after() {
+    __after() {
         this.log('this happens after the tasks end');
     }
 };
