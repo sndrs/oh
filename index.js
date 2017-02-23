@@ -12,8 +12,22 @@ process.on('unhandledRejection', handleError);
 process.on('uncaughtException', handleError);
 
 const userTasks = require('./oh.js');
+const yargs = require('yargs').usage('$0 <cmd> [args]').alias('h', 'help');
+
+Object.keys(userTasks)
+    .filter(task => !task.includes('__'))
+    .sort()
+    .forEach(task => yargs.command(task));
+
+const { _: tasksToRun } = yargs.help().argv;
 
 const oh = new Runner(userTasks);
 
-// run task if we can
-oh.before().then(() => oh.run('compile')).then(() => oh.after());
+oh
+    .before()
+    .then(() =>
+        tasksToRun.reduce(
+            (allTasks, task) => allTasks.then(() => oh.run(task)),
+            Promise.resolve()
+        ))
+    .then(() => oh.after());
