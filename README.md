@@ -69,7 +69,7 @@ module.exports = {
 ```
 Now you can run `oh main`, `oh ls` etc.
 
-You can also run multiple tasks e.g. `oh other other2`. They will run in series. 
+You can also run multiple tasks e.g. `oh other other2`. They will run in series.
 
 You can supply arguments to your tasks too e.g `oh main --dev`, `oh logOpts --greeting 'hi there'` etc. They are available via `this.args`.
 
@@ -113,5 +113,4 @@ Do something after the tasks end e.g. clean up artefacts, restore previous state
 ### Files
 - `oh.js` task manifest – this is the file you'd expect to see in a project root
 - `index.js` the application that runs the tasks in `oh.js`
-- `oh` the binary that points at `index.js`
-
+- `bin` the script `oh ...` runs on the command line

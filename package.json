@@ -8,6 +8,7 @@
     "yargs": "^6.6.0"
   },
   "name": "oh",
+  "bin": "bin",
   "version": "0.1.0",
   "description": "Tiny task runner",
   "main": "index.js",
