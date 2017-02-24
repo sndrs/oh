@@ -24,7 +24,7 @@ const yargs = require('yargs')
     .version()
     .alias({
         version: 'v',
-        help: 'h'
+        help: 'h',
     });
 
 // add all possible user tasks to the help output

@@ -27,5 +27,5 @@ module.exports = {
 
     __after() {
         this.log('this happens after the tasks end');
-    }
+    },
 };
