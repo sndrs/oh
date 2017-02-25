@@ -2,12 +2,9 @@ const chalk = require('chalk');
 const omit = require('lodash.omit');
 
 const Runner = require('./lib/oh.runner');
+const handleError = require('./lib/handle-error');
 
 // generic error handling, we don't need to handle them anywhere else
-const handleError = err => {
-    console.log(chalk.black.bgRed(`OH_NO_${err.stack || err}`));
-    process.exit(1);
-};
 process.on('unhandledRejection', handleError);
 process.on('uncaughtException', handleError);
 
