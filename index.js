@@ -1,4 +1,3 @@
-const chalk = require('chalk');
 const omit = require('lodash.omit');
 
 const Runner = require('./lib/oh.runner');
