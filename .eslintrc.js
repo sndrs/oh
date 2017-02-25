@@ -3,6 +3,7 @@ module.exports = {
     installedESLint: true,
     plugins: ['react', 'jsx-a11y', 'import', 'prettier'],
     rules: {
+		'no-console': 0,
         'prettier/prettier': [
             'error',
             {

@@ -1,4 +1,3 @@
-/* eslint-disable no-console, camelcase */
 const chalk = require('chalk');
 const omit = require('lodash.omit');
 
