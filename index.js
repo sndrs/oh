@@ -38,17 +38,12 @@ Object.keys(userTasks)
 const { _: tasksToRun } = yargs.argv;
 const args = omit(yargs.argv, ['_', 'h', 'help', 'v', 'version', '$0']);
 
-// if no command is supplied, just show help
-if (!tasksToRun.length) {
-    yargs.showHelp();
-} else {
-    const oh = new Runner(userTasks, args);
-    oh
-        .before()
-        .then(() =>
-            tasksToRun.reduce(
-                (allTasks, task) => allTasks.then(() => oh.run(task)),
-                Promise.resolve()
-            ))
-        .then(() => oh.after());
-}
+const oh = new Runner(userTasks, args);
+oh
+    .before()
+    .then(() =>
+        tasksToRun.reduce(
+            (allTasks, task) => allTasks.then(() => oh.run(task)),
+            Promise.resolve()
+        ))
+    .then(() => oh.after());
