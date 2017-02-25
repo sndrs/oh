@@ -13,10 +13,13 @@ const userTasks = require('./oh.js');
 
 // parse the args from running `oh ...`
 const yargs = require('yargs')
-    .usage('$0 <cmd> [args]')
+    .usage('$0 <task> [task] [args]')
     .recommendCommands()
     .demandCommand(1, 'You need to supply at least one task to run.')
-    .help()
+    .help('help', 'Show help (this)')
+    .updateStrings({
+        'Commands:': 'Available tasks:',
+    })
     .version()
     .alias({
         version: 'v',
