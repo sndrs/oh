@@ -15,12 +15,9 @@ In-development PoC of a tiny, development and CI-friendly task-runner.
 
 ## Features
 
-- verbose by default
-- fails visibly then kills itself
 - small, simple API
-
-![](screenshots/running.png)
-![](screenshots/error.png)
+- verbose by default
+- fails visibly then kills itself so that any errors cannot go unnoticed e.g. on a CI
 
 ## Why?
 
