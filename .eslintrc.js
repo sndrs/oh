@@ -4,6 +4,7 @@ module.exports = {
     plugins: ['react', 'jsx-a11y', 'import', 'prettier'],
     rules: {
 		'no-console': 0,
+		'no-confusing-arrow': 0,
         'prettier/prettier': [
             'error',
             {

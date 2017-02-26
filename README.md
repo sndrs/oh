@@ -78,9 +78,6 @@ Any function that you `export` from `oh.js` becomes a task.
 
 `oh` provides the following helpers for use in a task:
 
-### this.log(String)
-Tell yourself something about whats going on.
-
 ### this.run(String|Array)
 Run other tasks defined in `oh.js`. An array of task names will run in parallel.
 
@@ -93,6 +90,15 @@ Returns a promise that resolves once the command completes.
 
 ### this.args
 An object representing any options in the command, except `h`, `help`, `v` and `version`.
+
+### this.log(anything, [anything])
+Tell yourself something about whats going on.
+
+### this.info(anything, [anything])
+Tell yourself something about what you've done or should do now.
+
+### this.error(anything, [anything])
+Stop everything, with an explanation. As with all errors, this will kill the process to prevent errors going unnoticed.
 
 ## Built-in tasks
 
