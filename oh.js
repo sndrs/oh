@@ -1,14 +1,10 @@
 module.exports = {
-    __before() {
-        this.log('this happens before the tasks start');
-    },
-
     main() {
         return this.run('logOpts').then(() => this.run('other'));
     },
 
     other() {
-        return this.run(['other2', 'ls']).then(() => this.log('ran others'));
+        return this.run(['other2', 'ls']);
     },
 
     other2() {
@@ -26,6 +22,6 @@ module.exports = {
     },
 
     __after() {
-        this.log('this happens after the tasks end');
+        this.info("don't forget to do that thing");
     },
 };
