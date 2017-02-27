@@ -1,4 +1,5 @@
 const omit = require('lodash.omit');
+const findUp = require('find-up');
 
 const Runner = require('./lib/oh.runner');
 const handleError = require('./lib/handle-error');
@@ -8,7 +9,8 @@ process.on('unhandledRejection', handleError);
 process.on('uncaughtException', handleError);
 
 // get the list of user tasks from a local oh.js
-const userTasks = require('./oh.js');
+// eslint-disable-next-line import/no-dynamic-require
+const userTasks = require(findUp.sync('oh.js'));
 
 // parse the args from running `oh ...`
 const yargs = require('yargs')
