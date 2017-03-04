@@ -1,30 +1,28 @@
 module.exports = {
     extends: ['airbnb', 'prettier'],
     installedESLint: true,
-    plugins: ['react', 'jsx-a11y', 'import', 'prettier'],
+    plugins: ['import', 'prettier'],
     rules: {
-		'no-console': 0,
-		'no-confusing-arrow': 0,
+        'no-console': 0,
+        'import/newline-after-import': 0,
+		'no-underscore-dangle': 0,
         'prettier/prettier': [
             'error',
             {
-                trailingComma: "es5",
+                trailingComma: 'es5',
                 singleQuote: true,
                 tabWidth: 4,
-                bracketSpacing: true,
-            },
-        ],
+                bracketSpacing: true
+            }
+        ]
     },
     parserOptions: {
         ecmaVersion: 2016,
         sourceType: 'module',
-        ecmaFeatures: {
-            jsx: true,
-        },
     },
     env: {
         es6: true,
         node: true,
-		jest: true
-    },
+        jest: true
+    }
 };
