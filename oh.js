@@ -18,7 +18,7 @@ module.exports = {
     },
 
     logOpts() {
-        this.log(this.args);
+        return this.exec('ls -l');
     },
 
     __after() {
