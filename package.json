@@ -4,11 +4,9 @@
     "execa": "^0.6.0",
     "find-up": "^2.1.0",
     "jest": "^19.0.2",
-    "lodash.omit": "^4.5.0",
     "minimist": "^1.2.0",
     "string-width": "^2.0.0",
-    "term-size": "^0.1.1",
-    "yargs": "^6.6.0"
+    "term-size": "^0.1.1"
   },
   "name": "oh",
   "bin": {
