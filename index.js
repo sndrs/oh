@@ -63,12 +63,15 @@ process.chdir(path.dirname(path.resolve(ohFile)));
 
 // get the bits we needs from the args
 const tasksToRun = argv._;
-const userArgs = Object.keys(argv).reduce((result, arg) => {
-    if (['_', 'h', 'help', 'v', 'version', '$0'].some(_ => _ === arg)) {
-        return result;
-    }
-    return Object.assign(result, { [arg]: argv[arg] });
-}, {});
+const userArgs = Object.keys(argv).reduce(
+    (result, arg) => {
+        if (['_', 'h', 'help', 'v', 'version', '$0'].some(_ => _ === arg)) {
+            return result;
+        }
+        return Object.assign(result, { [arg]: argv[arg] });
+    },
+    {}
+);
 
 // turn the functions exported by oh.js into OhTasks
 const runTask = require('./lib/runTask');
