@@ -3,30 +3,27 @@
 In-development PoC of a tiny, development and CI-friendly task-runner.
 
 ### To do
-- [x] accept task names as input `oh x` etc
-- [x] make all flags available to tasks
-- [x] add quiet mode (no task logging except errors)
-- [x] show that tasks are subtasks in the terminal
-- [ ] autocomplete task names
 - [ ] tests!
-- [x] parallel tasks
+- [ ] autocomplete task names
 - [ ] allow multiple manifests (`oh.compile.js` => `oh compile.css`, `oh.test.js` => `oh test.app`)
-- [x] a way to specify where to find manifests
 
 ## Features
 
 - small, simple API
 - verbose by default
-- fails visibly then kills itself so that any errors cannot go unnoticed e.g. on a CI
+- fails visibly then kills the process on error, so that any errors cannot go unnoticed e.g. on a CI
 
 ## Why?
 
 - **make** really just wants to make things, and can be too restrictive e.g. it's hard to pass args or use modules from npm
 - **npm scripts** can be too terse
-- **gulp**/**grunt** et al are hefty and often rely on 3rd party plugins
+- **gulp**/**grunt** et al are complex and often rely on 3rd party plugins
 
 ## Usage
-`oh` will look for a task manifest called `oh.js`, for example this one:
+
+Install oh: `npm i -g oh` or `yarn global add oh`.
+
+Then create a task manifest called `oh.js`, for example this one:
 
 ```javascript
 // oh.js
@@ -64,16 +61,32 @@ module.exports = {
 };
 
 ```
+
+
 Now you can run `oh main`, `oh ls` etc.
 
 You can also run multiple tasks e.g. `oh other other2`. They will run in series.
 
-You can supply arguments to your tasks too e.g `oh main --dev`, `oh logOpts --greeting 'hi there'` etc. They are available via `this.args`.
+Oh provides some options:
+
+```
+  -h, --help       output usage information            [boolean]
+  -v, --version    output the version number           [boolean]
+  -q, --quiet      only log error output from tasks    [boolean]
+  --oh             path to an oh.js manifest            [string]
+```  
+
+Any other arguments you provide are passed directly through to your tasks e.g. 
+
+```bash
+> oh main --dev # this.args.dev === true
+> oh logOpts --greeting 'hi there' # this.args.greeting === 'hi there'
+```
 
 ## API
-Any function that you `export` from `oh.js` becomes a task.
+Any function that you export from `oh.js` becomes a task.
 
-`oh` provides the following helpers for use in a task:
+The following helpers are available:
 
 ### this.run(String|Array)
 Run other tasks defined in `oh.js`. An array of task names will run in parallel.
