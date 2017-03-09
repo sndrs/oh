@@ -5,7 +5,7 @@ In-development PoC of a tiny, development and CI-friendly task-runner.
 ### To do
 - [x] accept task names as input `oh x` etc
 - [x] make all flags available to tasks
-- [ ] add quiet mode (no task logging except errors)
+- [x] add quiet mode (no task logging except errors)
 - [x] show that tasks are subtasks in the terminal
 - [ ] autocomplete task names
 - [ ] tests!

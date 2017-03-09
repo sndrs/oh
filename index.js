@@ -16,9 +16,13 @@ process.on('uncaughtException', handleError);
 
 // process user input
 const argv = minimist(process.argv.slice(2), {
-    boolean: ['version', 'help'],
+    boolean: ['version', 'help', 'quiet'],
     string: ['oh'],
-    alias: { help: 'h', version: 'v' },
+    alias: { help: 'h', version: 'v', quiet: 'q' },
+    default: {
+        help: false,
+        quiet: false,
+    },
 });
 
 // find the oh.js
@@ -78,7 +82,11 @@ process.chdir(path.dirname(path.resolve(ohFilePath)));
 const tasksToRun = argv._;
 const userArgs = Object.keys(argv).reduce(
     (result, arg) => {
-        if (['_', 'h', 'help', 'v', 'version', 'oh'].some(_ => _ === arg)) {
+        if (
+            ['_', 'h', 'help', 'v', 'version', 'q', 'quiet', 'oh'].some(
+                _ => _ === arg
+            )
+        ) {
             return result;
         }
         return Object.assign(result, { [arg]: argv[arg] });
@@ -88,7 +96,11 @@ const userArgs = Object.keys(argv).reduce(
 
 // turn the functions exported by oh.js into OhTasks
 const runTask = require('./lib/runTask');
-runTask.addTasks({ userTasks, userArgs });
+runTask.addTasks({
+    userTasks,
+    userArgs,
+    quiet: argv.quiet,
+});
 
 runTask('__before', { silent: true })
     .then(() =>

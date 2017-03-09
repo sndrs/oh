@@ -18,7 +18,7 @@ module.exports = {
     },
 
     logArgs() {
-        this.log(this.args);
+        this.log('ewwe', this.args);
         return this.exec('ls -l');
     },
 
@@ -26,5 +26,7 @@ module.exports = {
         return this.exec('jest');
     },
 
-    __after() {},
+    __after() {
+        this.info('all done');
+    },
 };
