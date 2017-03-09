@@ -1,6 +1,7 @@
 /* eslint-disable import/no-dynamic-require, global-require */
 
 const path = require('path');
+const fs = require('fs');
 
 const minimist = require('minimist');
 const findUp = require('find-up');
@@ -16,18 +17,30 @@ process.on('uncaughtException', handleError);
 // process user input
 const argv = minimist(process.argv.slice(2), {
     boolean: ['version', 'help'],
+    string: ['oh'],
     alias: { help: 'h', version: 'v' },
 });
 
 // find the oh.js
-const ohFile = findUp.sync('oh.js');
+// eslint-disable-next-line no-nested-ternary
+const ohFilePath = argv.oh
+    ? fs.existsSync(argv.oh) ? argv.oh : null
+    : findUp.sync('oh.js');
 
 // if it doesn't exist, error and stop
-if (!ohFile) {
+if (argv.oh && !ohFilePath) {
+    showHelp({
+        message: chalk.red(`${argv.oh} could not be found.`),
+    });
+    process.exit(1);
+}
+
+// if it doesn't exist, error and stop
+if (!ohFilePath) {
     const pkg = require('./package.json');
     showHelp({
         message: chalk.red(
-            `No task manifest (oh.js) could be found.
+            `No task manifest could be found.
 See ${chalk.green(pkg.homepage)} to find out more.`
         ),
     });
@@ -35,11 +48,11 @@ See ${chalk.green(pkg.homepage)} to find out more.`
 }
 
 // get the list of tasks defined in the manifest
-const userTasks = require(ohFile);
+const userTasks = require(ohFilePath);
 
 // if we have the help flag or no tasks, show help
 if (argv.help || !argv._.length) {
-    showHelp({ userTasks, ohFile });
+    showHelp({ userTasks, ohFilePath });
     process.exit(argv.help ? 0 : 1);
 }
 
@@ -48,7 +61,7 @@ const unknownTasks = argv._.filter(_ => !userTasks[_]);
 if (unknownTasks.length) {
     showHelp({
         userTasks,
-        ohFile,
+        ohFilePath,
         message: unknownTasks
             .map(_ => `${chalk.red(_)} ${chalk.dim('does not exist.')}`)
             .join('\n'),
@@ -59,13 +72,13 @@ if (unknownTasks.length) {
 // down to business...
 
 // set cwd to wherever oh.js is
-process.chdir(path.dirname(path.resolve(ohFile)));
+process.chdir(path.dirname(path.resolve(ohFilePath)));
 
 // get the bits we needs from the args
 const tasksToRun = argv._;
 const userArgs = Object.keys(argv).reduce(
     (result, arg) => {
-        if (['_', 'h', 'help', 'v', 'version', '$0'].some(_ => _ === arg)) {
+        if (['_', 'h', 'help', 'v', 'version', 'oh'].some(_ => _ === arg)) {
             return result;
         }
         return Object.assign(result, { [arg]: argv[arg] });
