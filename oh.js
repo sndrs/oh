@@ -1,6 +1,6 @@
 module.exports = {
     main() {
-        return this.run('logOpts').then(() => this.run('other'));
+        return this.run('logArgs').then(() => this.run('other'));
     },
 
     other() {
@@ -17,11 +17,14 @@ module.exports = {
         return this.exec('ls');
     },
 
-    logOpts() {
+    logArgs() {
         this.log(this.args);
+        return this.exec('ls -l');
     },
 
-    __after() {
-        this.info("don't forget to do that thing");
+    test() {
+        return this.exec('jest');
     },
+
+    __after() {},
 };

@@ -1,50 +1,86 @@
-const omit = require('lodash.omit');
-const findUp = require('find-up');
+/* eslint-disable import/no-dynamic-require, global-require */
 
-const Runner = require('./lib/oh.runner');
-const handleError = require('./lib/handle-error');
+const path = require('path');
+
+const minimist = require('minimist');
+const findUp = require('find-up');
+const chalk = require('chalk');
+
+const showHelp = require('./lib/help');
 
 // generic error handling, we don't need to handle them anywhere else
+const handleError = require('./lib/handle-error');
 process.on('unhandledRejection', handleError);
 process.on('uncaughtException', handleError);
 
-// get the list of user tasks from a local oh.js
-// eslint-disable-next-line import/no-dynamic-require
-const userTasks = require(findUp.sync('oh.js'));
+// process user input
+const argv = minimist(process.argv.slice(2), {
+    boolean: ['version', 'help'],
+    alias: { help: 'h', version: 'v' },
+});
 
-// parse the args from running `oh ...`
-const yargs = require('yargs')
-    .usage('$0 <task> [task] [args]')
-    .recommendCommands()
-    .demandCommand(1, 'You need to supply at least one task to run.')
-    .help('help', 'Show help (this)')
-    .updateStrings({
-        'Commands:': 'Available tasks:',
-    })
-    .version()
-    .alias({
-        version: 'v',
-        help: 'h',
-    });
+// find the oh.js
+const ohFile = findUp.sync('oh.js');
 
-// add all possible user tasks to the help output
-Object.keys(userTasks)
-    .filter(task => !task.includes('__'))
-    .sort()
-    .forEach(task => {
-        yargs.command(task);
+// if it doesn't exist, error and stop
+if (!ohFile) {
+    const pkg = require('./package.json');
+    showHelp({
+        message: chalk.red(
+            `No task manifest (oh.js) could be found.
+See ${chalk.green(pkg.homepage)} to find out more.`
+        ),
     });
+    process.exit(1);
+}
+
+// get the list of tasks defined in the manifest
+const userTasks = require(ohFile);
+
+// if we have the help flag or no tasks, show help
+if (argv.help || !argv._.length) {
+    showHelp({ userTasks, ohFile });
+    process.exit(argv.help ? 0 : 1);
+}
+
+// if we have an unkown task/s, show help
+const unknownTasks = argv._.filter(_ => !userTasks[_]);
+if (unknownTasks.length) {
+    showHelp({
+        userTasks,
+        ohFile,
+        message: unknownTasks
+            .map(_ => `${chalk.red(_)} ${chalk.dim('does not exist.')}`)
+            .join('\n'),
+    });
+    process.exit(0);
+}
+
+// down to business...
+
+// set cwd to wherever oh.js is
+process.chdir(path.dirname(path.resolve(ohFile)));
 
 // get the bits we needs from the args
-const { _: tasksToRun } = yargs.argv;
-const args = omit(yargs.argv, ['_', 'h', 'help', 'v', 'version', '$0']);
+const tasksToRun = argv._;
+const userArgs = Object.keys(argv).reduce(
+    (result, arg) => {
+        if (['_', 'h', 'help', 'v', 'version', '$0'].some(_ => _ === arg)) {
+            return result;
+        }
+        return Object.assign(result, { [arg]: argv[arg] });
+    },
+    {}
+);
 
-const oh = new Runner(userTasks, args);
-oh
-    .before()
+// turn the functions exported by oh.js into OhTasks
+const runTask = require('./lib/runTask');
+runTask.addTasks({ userTasks, userArgs });
+
+runTask('__before', { silent: true })
     .then(() =>
         tasksToRun.reduce(
-            (allTasks, task) => allTasks.then(() => oh.run(task)),
+            (allTasks, taskToRun) => allTasks.then(() => runTask(taskToRun)),
             Promise.resolve()
         ))
-    .then(() => oh.after());
+    .then(() => runTask('__after', { silent: true }));
