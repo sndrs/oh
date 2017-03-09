@@ -67,7 +67,7 @@ if (unknownTasks.length) {
         userTasks,
         ohFilePath,
         message: unknownTasks
-            .map(_ => `${chalk.red(_)} ${chalk.dim('does not exist.')}`)
+            .map(_ => `${chalk.red(_)} ${chalk.dim('is not a task.')}`)
             .join('\n'),
     });
     process.exit(0);
