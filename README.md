@@ -1,5 +1,7 @@
 # `oh`
 
+[![Greenkeeper badge](https://badges.greenkeeper.io/sndrs/oh.svg)](https://greenkeeper.io/)
+
 In-development PoC of a tiny, development and CI-friendly task-runner.
 
 ### To do
